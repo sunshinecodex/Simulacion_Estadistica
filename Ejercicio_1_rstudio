@@ -1,0 +1,39 @@
+#Codigo completo del primer ejercicio en Rstudio
+n <- 75
+m <- 6
+repe <- TRUE
+nsim <- 1000
+nsobres <- numeric(nsim)
+set.seed(1)
+for (isim in 1:nsim) {
+  album <- logical(n)
+  i <- 0
+  while (sum(album) < n) {
+    i <- i + 1
+    
+    
+    album[sample(n, m, replace = repe)] <- TRUE
+  }
+  nsobres[isim] <- i
+}
+
+hist(nsobres, breaks = "FD", freq = FALSE, main = "", xlab = "Numero de sobres")
+lines(density(nsobres))
+
+
+sol <- mean(nsobres)
+print(sol)
+
+nmin <- quantile(nsobres, probs = 0.95)
+print(ceiling(nmin))
+print(ceiling(nsim) * 0.8)
+
+
+hist(nsobres, breaks = "FD", freq = FALSE, main = "", xlab = "Numero de sobres")
+lines(density(nsobres))
+abline(v = sol)
+abline(v = nmin, lty = 2)
+
+res <- simres::mc.plot(nsobres*0.8)
+res$approx # sol•0.8
+simres::mc.plot()
