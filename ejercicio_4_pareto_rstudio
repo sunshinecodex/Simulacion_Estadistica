@@ -1,0 +1,19 @@
+# Función para generar números aleatorios de la distribución de Pareto (método de la transformación inversa)
+rpareto_immersion <- function(n, xmin, alpha) {
+  u <- runif(n)
+  x <- xmin / (1 - u)^(1/alpha)
+  return(x)
+}
+
+# Parámetros de la distribución de Pareto
+xmin <- 1   # Valor mínimo
+alpha <- 2  # Parámetro de forma
+
+# Número de muestras a generar
+n <- 10000
+
+# Generar números aleatorios de la distribución de Pareto
+pareto_numbers <- rpareto_immersion(n, xmin, alpha)
+
+# Visualizar la distribución de Pareto
+hist(pareto_numbers, breaks = 50, freq = FALSE, col = 'skyblue', main = 'Distribución de Pareto', xlab = 'Valor')
