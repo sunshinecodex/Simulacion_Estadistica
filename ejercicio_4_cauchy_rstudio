@@ -1,0 +1,20 @@
+# Función para generar números aleatorios de la distribución de Cauchy (método de inmersión)
+rcauchy_immersion <- function(n, x0, gamma) {
+  u <- runif(n)
+  x <- x0 + gamma * tan(pi * (u - 0.5))
+  return(x)
+}
+
+# Parámetros de la distribución de Cauchy
+x0 <- 0   # Parámetro de localización
+gamma <- 1    # Parámetro de escala
+
+# Número de muestras a generar
+n <- 10000
+
+# Generar números aleatorios de la distribución de Cauchy
+cauchy_numbers <- rcauchy_immersion(n, x0, gamma)
+
+# Visualizar la distribución de Cauchy
+hist(cauchy_numbers, breaks = 50, freq = FALSE, col = 'skyblue', main = 'Distribución de Cauchy', xlab = 'Valor')
+lines(density(cauchy_numbers), col = 'red', lwd = 2)
