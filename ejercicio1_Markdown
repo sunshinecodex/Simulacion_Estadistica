@@ -1,0 +1,51 @@
+---
+title: "Simulación de Llenado de Álbum de Cromos"
+author: "Tu Nombre"
+date: "2024-03-28"
+output: html_document
+---
+
+
+Supongamos que nos regalan un áJbum con n = 75 cromos, que se venden sobres con m = 6 cron.1os
+por 0 .8€, y que estamos interesados en el número de sobres que hay que comprar para completar la
+colección, por ejemplo en sn valor medio.
+Podemos aproximar la distribución del número de sobres para completar la colección a partir de
+nsim = 1000 simulaciones de coleccionistas de cromos:
+
+```{r}
+
+n <- 75
+m <- 6
+repe <- TRUE
+nsim <- 1000
+nsobres <- numeric(nsim)
+set.seed(1)
+for (isim in 1:nsim) {
+  album <- logical(n)
+  i <- 0
+  while (sum(album) < n) {
+    i <- i + 1
+    
+
+
+    album[sample(n, m, replace = repe)] <- TRUE
+  }
+  nsobres[isim] <- i
+}
+
+hist(nsobres, breaks = "FD", freq = FALSE, main = "", xlab = "Numero de sobres")
+lines(density(nsobres))
+
+
+sol <- mean(nsobres)
+print(sol)
+
+nmin <- quantile(nsobres, probs = 0.95)
+print(ceiling(nmin))
+print(ceiling(nsim) * 0.8)
+
+  
+hist(nsobres, breaks = "FD", freq = FALSE, main = "", xlab = "Numero de sobres")
+lines(density(nsobres))
+abline(v = sol)
+abline(v = nmin, lty = 2)
