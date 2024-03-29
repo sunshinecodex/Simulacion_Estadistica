@@ -1,0 +1,20 @@
+# Función para generar números aleatorios de la distribución triangular (método de inmersión)
+rtriangular_immersion <- function(n, a, b, c) {
+  u <- runif(n)
+  x <- ifelse(u <= (c - a)/(b - a), a + sqrt(u * (b - a) * (c - a)), b - sqrt((1 - u) * (b - a) * (b - c)))
+  return(x)
+}
+
+# Parámetros de la distribución triangular
+a <- 0   # Valor mínimo
+b <- 5   # Moda
+c <- 10  # Valor máximo
+
+# Número de muestras a generar
+n <- 10000
+
+# Generar números aleatorios de la distribución triangular
+triangular_numbers <- rtriangular_immersion(n, a, b, c)
+
+# Visualizar la distribución triangular
+hist(triangular_numbers, breaks = 50, freq = FALSE, col = 'skyblue', main = 'Distribución triangular', xlab = 'Valor')
