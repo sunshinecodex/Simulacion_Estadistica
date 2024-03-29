@@ -1,0 +1,21 @@
+
+# Función para generar números aleatorios de la distribución de Laplace (Doble exponencial)
+rlaplace_immersion <- function(n, mu, b) {
+  u <- runif(n)
+  x <- ifelse(u < 0.5, mu - b * log(2 * u), mu + b * log(2 - 2 * u))
+  return(x)
+}
+
+# Parámetros de la distribución de Laplace
+mu <- 0   # Parámetro de localización (media)
+b <- 1    # Parámetro de escala
+
+# Número de muestras a generar
+n <- 10000
+
+# Generar números aleatorios de la distribución de Laplace
+laplace_numbers <- rlaplace_immersion(n, mu, b)
+
+# Visualizar la distribución de Laplace
+hist(laplace_numbers, breaks = 50, freq = FALSE, col = 'skyblue', main = 'Distribución de Laplace', xlab = 'Valor')
+lines(density(laplace_numbers), col = 'red', lwd = 2)
