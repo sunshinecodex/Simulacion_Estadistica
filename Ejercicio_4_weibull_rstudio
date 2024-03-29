@@ -1,0 +1,19 @@
+# Función para generar números aleatorios de la distribución de Weibull (método de la transformación inversa)
+rweibull_immersion <- function(n, lambda, k) {
+  u <- runif(n)
+  x <- lambda * (-log(1 - u))^(1/k)
+  return(x)
+}
+
+# Parámetros de la distribución de Weibull
+lambda <- 1   # Parámetro de escala
+k <- 2        # Parámetro de forma
+
+# Número de muestras a generar
+n <- 10000
+
+# Generar números aleatorios de la distribución de Weibull
+weibull_numbers <- rweibull_immersion(n, lambda, k)
+
+# Visualizar la distribución de Weibull
+hist(weibull_numbers, breaks = 50, freq = FALSE, col = 'skyblue', main = 'Distribución de Weibull', xlab = 'Valor')
