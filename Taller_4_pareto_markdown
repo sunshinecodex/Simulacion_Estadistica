@@ -1,0 +1,82 @@
+---
+title: "taller4-3"
+author: "Ramiro Rodríguez"
+date: "2024-03-31"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+>Paso a Paso: Función Inversa de la Distribución de Pareto
+
+>Paso 1: Función de Densidad de Probabilidad (PDF) de Pareto
+La función de densidad de probabilidad (PDF) de la distribución de Pareto está dada por:
+
+$$ f(x) = \frac{\alpha \cdot x_m^\alpha}{x^{\alpha + 1}} $$
+
+$$donde ( x \geq x_m ), ( alpha > 0 ) .$$
+
+>Paso 2: Función de Distribución Acumulada (CDF) de Pareto
+La función de distribución acumulada (CDF) de la distribución de Pareto se define como:
+
+$$ F(x) = 1 - \left( \frac{x_m}{x} \right)^\alpha $$
+
+$$donde ( x \geq x_m ), ( \alpha > 0 )$$
+
+>Paso 3: Obtención de la Función Inversa de la CDF
+>Para obtener la función inversa de la CDF de Pareto, resolvemos la ecuación de la >CDF para ( x ):
+
+$$[ u = 1 - \left( \frac{x_m}{x} \right)^\alpha ]$$
+
+>donde ( u ) es un número aleatorio uniformemente distribuido entre 0 y 1. Resolviendo para ( x ), obtenemos:
+
+$$[ x = x_m \left( \frac{1}{1 - u} \right)^{\frac{1}{\alpha}} ]$$
+
+>Esta ecuación nos permite generar valores de la variable aleatoria ( X ) a partir >de números aleatorios ( u ) distribuidos uniformemente en el intervalo [0, 1].
+
+>Paso 4: Implementación en R
+
+```{r}
+# Función para generar números aleatorios con distribución de Pareto usando el método de inmersión
+rpareto_immersion <- function(n, shape, xmin) {
+  # Generar números aleatorios uniformemente distribuidos entre 0 y 1
+  u <- runif(n)
+  # Aplicar la función inversa de la CDF
+  x <- xmin / (1 - u)^(1/shape)
+  return(x)
+}
+
+# Función de densidad de la distribución de Pareto
+dpareto <- function(x, shape, xmin) {
+  ifelse(x >= xmin, shape * xmin^shape / x^(shape + 1), 0)
+}
+
+# Parámetros de la distribución de Pareto
+shape <- 2  # Parámetro de forma
+xmin <- 1   # Valor mínimo
+
+# Generar 1000 números aleatorios con distribución de Pareto
+n <- 1000
+pareto_numbers <- rpareto_immersion(n, shape, xmin)
+
+
+# Gráfico de densidad
+hist(pareto_numbers, breaks = 30, freq = FALSE, main = "Distribución de Pareto", xlab = "Valor", ylab = "Densidad")
+curve(dpareto(x, shape, xmin), add = TRUE, col = "blue", lwd = 2)
+legend("topright", legend = "Distribución de Pareto", col = "blue", lty = 1, lwd = 2)
+
+# Prueba de Ljung-Box
+p_values <- numeric(10)
+
+# Realizar la prueba de Ljung-Box para cada lag del 1 al 10
+for (lag in 1:10) {
+  ljung_box_test <- Box.test(pareto_numbers, lag = lag, type = "Ljung")
+  p_values[lag] <- ljung_box_test$p.value
+}
+
+# Imprimir los valores p para cada lag del 1 al 10
+print(p_values)
+```
+>Los valores p para los rezagos del 1 al 10 es menor que el nivel de significancia elegido (0.05), entonces hay evidencia de autocorrelación en ese rezago en particular.
+
