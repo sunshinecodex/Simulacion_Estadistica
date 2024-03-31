@@ -1,0 +1,27 @@
+---
+title: "Ejercicio del taller 3"
+author: "Ramiro Rodríguez"
+date: "2024-03-31"
+output: html_document
+---
+
+```{r}
+ts.sim <- arima.sim(list(order = c(1,0,1), ar = 0.5, ma=0.18), n = 4000)
+ts.sim <- ts.sim[1001:4000]
+
+
+par(mfrow=c(3,1))
+ts.plot(ts.sim)
+acf(ts.sim)    # Función de autocorrelación
+pacf(ts.sim)   # Función de autocorrelación parcial
+
+```
+
+>**Conclusiones:**
+>La función de autocorrelación nos muestra la correlación entre la serie en diferentes rezagos. Con un coeficiente AR de 0.5, esperaríamos ver autocorrelaciones significativas para los rezagos pasados. La función ACF debería decaer gradualmente a medida que aumenta el rezago debido al componente MA
+
+>Con un coeficiente AR de 0.5, esperaríamos ver una autocorrelación parcial significativa en el primer rezago y una disminución gradual en los rezagos posteriores.
+
+
+
+
