@@ -1,0 +1,83 @@
+---
+title: "Taller 4 Métodos de inmersión Distribución de cauchy"
+author: "Ramiro Rodríguez"
+date: "2024-03-31"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+>ejercicio 4 aplicacion del metodo de inmersion para generar numeros aleatorio  
+>con la distribucion de cauchy
+
+> Expresar \( y \) en términos de \( x \)**:
+
+$$F(x)= F(x) = \frac{1}{2} + \frac{1}{\pi} \arctan(x)$$
+
+```
+Despejamos ( x )
+```
+
+
+$$ y = \frac{1}{2} + \frac{1}{\pi} \arctan(x) $$ 
+
+
+
+$$ y - \frac{1}{2} = \frac{1}{\pi} \arctan(x) $$
+
+```
+Aplicar la función tangente inversa (arctan)
+```
+$$[ \pi(y - \frac{1}{2}) = \arctan(x) $$
+
+
+
+$$[ x = \tan(\pi(y - \frac{1}{2})) $$
+>Este es el resultado de la inversión de la función de distribución acumulativa para la distribución de Cauchy. 
+
+
+## R Markdown
+
+>Codigo del método de inmersion para generar numeros aleatorios para la distribucion de cauchyu
+
+```{r}
+# Función para generar números aleatorios de la distribución de Cauchy (método de inmersión)
+rcauchy_immersion <- function(n, x0, gamma) {
+  u <- runif(n)
+  x <- x0 + gamma * tan(pi * (u - 0.5))
+  return(x)
+}
+
+# Parámetros de la distribución de Cauchy
+x0 <- 0   # Parámetro de localización
+gamma <- 1    # Parámetro de escala
+
+# Número de muestras a generar
+n <- 10000
+
+# Generar números aleatorios de la distribución de Cauchy
+cauchy_numbers <- rcauchy_immersion(n, x0, gamma)
+
+# Visualizar la distribución de Cauchy
+hist(cauchy_numbers, breaks = 50, freq = FALSE, col = 'skyblue', main = 'Distribución de Cauchy', xlab = 'Valor')
+lines(density(cauchy_numbers), col = 'red', lwd = 2)
+
+ljung_box_test <- Box.test(cauchy_numbers, lag = 3, type = "Ljung")
+print(ljung_box_test)
+
+# Vector para almacenar los valores p de la prueba de Ljung-Box para cada lag del 1 al 10
+p_values <- numeric(10)
+
+# Realizar la prueba de Ljung-Box para cada lag del 1 al 10
+for (lag in 1:10) {
+  ljung_box_test <- Box.test(cauchy_numbers, lag = lag, type = "Ljung")
+  p_values[lag] <- ljung_box_test$p.value
+}
+
+# Imprimir los valores p para cada lag del 1 al 10
+print(p_values)
+
+```
+>Los valores p para los rezagos del 1 al 10 es menor que el nivel de significancia elegido (0.05), entonces hay evidencia de autocorrelación en ese rezago en particular.
