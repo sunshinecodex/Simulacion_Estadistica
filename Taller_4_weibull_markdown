@@ -1,0 +1,77 @@
+---
+title: "Taller 4 Métodos de inmersión Distribución de weibull"
+author: "Ramiro Rodríguez"
+date: "2024-03-31"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+>Función de Densidad de Probabilidad (PDF) de Weibull:
+>La función de densidad de probabilidad (PDF) de la distribución de Weibull está dada por la fórmula:
+
+$$
+f(x) = \frac{k}{\lambda} \left(\frac{x}{\lambda}\right)^{k-1} e^{-(x/\lambda)^k}$$
+
+>Donde ( k ) es el parámetro de forma y ( lambda ) es el parámetro de escala.
+
+>Función de Distribución Acumulada (CDF) de Weibull:
+>La función de distribución acumulada (CDF) de la distribución de Weibull está dada por la fórmula:
+
+$$F(x) = 1 - e^{-(x/\lambda)^k}$$
+
+> Función Inversa de la CDF de Weibull:
+>La función inversa de la CDF de la distribución de Weibull es:
+
+
+$$x = \lambda (-\ln(1 - u))^{1/k}$$
+
+>Donde \( u \) es un número aleatorio uniformemente distribuido entre 0 y 1.
+
+```{r}
+
+# Función de densidad de probabilidad (PDF) de Weibull
+dweibull <- function(x, shape, scale) {
+  (shape / scale) * (x / scale)^(shape - 1) * exp(-(x / scale)^shape)
+}
+
+# Función de distribución acumulada (CDF) de Weibull
+pweibull <- function(x, shape, scale) {
+  1 - exp(-(x / scale)^shape)
+}
+
+# Función inversa de la CDF de Weibull
+qweibull <- function(u, shape, scale) {
+  scale * (-log(1 - u))^(1 / shape)
+}
+
+# Parámetros de la distribución de Weibull
+shape <- 2  # Parámetro de forma
+scale <- 1  # Parámetro de escala
+
+# Generar 1000 números aleatorios con distribución de Weibull
+n <- 1000
+weibull_numbers <- qweibull(runif(n), shape, scale)
+
+# Prueba de Ljung-Box
+p_values <- numeric(10)
+
+# Realizar la prueba de Ljung-Box para cada lag del 1 al 10
+for (lag in 1:10) {
+  ljung_box_test <- Box.test(weibull_numbers, lag = lag, type = "Ljung")
+  p_values[lag] <- ljung_box_test$p.value
+}
+
+# Imprimir los valores p para cada lag del 1 al 10
+print(p_values)
+
+# Graficar los valores p
+plot(1:10, p_values, type = "b", pch = 19, col = "blue", 
+     main = "Valores p de la Prueba de Ljung-Box para Weibull", xlab = "Lag", ylab = "Valor p")
+abline(h = 0.05, col = "red", lty = 2)  # Línea horizontal en p = 0.05 como umbral
+legend("topright", legend = "Umbral (p = 0.05)", col = "red", lty = 2)
+```
+
+>Los valores p para los rezagos del 1 al 10 es menor que el nivel de significancia elegido (0.05), entonces hay evidencia de autocorrelación en ese rezago en particular.
+
