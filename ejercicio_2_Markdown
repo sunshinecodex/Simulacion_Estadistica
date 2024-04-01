@@ -4,6 +4,7 @@ author: "Ramiro Rodríguez"
 date: "2024-03-29"
 output: html_document
 ---
+>thelta=-0.8
 
 ```{r}
 modeloma <- function(cte, theta1, sigma, nsim, pc) {
@@ -14,10 +15,48 @@ modeloma <- function(cte, theta1, sigma, nsim, pc) {
   }
   return(datos = X[(pc + 1):(nsim + pc)])
 }
-
 s <- modeloma(cte = 0, theta1 = -0.8, sigma = 2, nsim = 3000, pc = 1000)
 
 par(mfrow = c(3, 1))
 ts.plot(s, main = "Serie de tiempo")
 acf(s, main = "Autocorrelación")
 pacf(s, main = "Autocorrelación parcial")
+```
+
+>Thelta=2
+```{r}
+modeloma <- function(cte, theta1, sigma, nsim, pc) {
+  X <- rep(0, nsim + pc)
+  errores <- rnorm(nsim + pc, mean = 0, sd = 2)
+  for (k in 2:(nsim + pc)) {
+    X[k] <- cte + theta1 * errores[k - 1]+errores[k]
+  }
+  return(datos = X[(pc + 1):(nsim + pc)])
+}
+
+s <- modeloma(cte = 0, theta1 = 2, sigma = 2, nsim = 3000, pc = 1000)
+
+par(mfrow = c(3, 1))
+ts.plot(s, main = "Serie de tiempo")
+acf(s, main = "Autocorrelación")
+pacf(s, main = "Autocorrelación parcial")
+```
+
+>Theta=1
+```{r}
+modeloma <- function(cte, theta1, sigma, nsim, pc) {
+  X <- rep(0, nsim + pc)
+  errores <- rnorm(nsim + pc, mean = 0, sd = 2)
+  for (k in 2:(nsim + pc)) {
+    X[k] <- cte + theta1 * errores[k - 1]+errores[k]
+  }
+  return(datos = X[(pc + 1):(nsim + pc)])
+}
+
+s <- modeloma(cte = 0, theta1 = 1 , sigma = 2, nsim = 3000, pc = 1000)
+
+par(mfrow = c(3, 1))
+ts.plot(s, main = "Serie de tiempo")
+acf(s, main = "Autocorrelación")
+pacf(s, main = "Autocorrelación parcial")
+```
