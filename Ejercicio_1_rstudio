@@ -1,8 +1,23 @@
-#Codigo completo del primer ejercicio en Rstudio
-n <- 75
-m <- 6
-repe <- TRUE
+---
+title: "<center>**PRIMER TALLER DE INFERENCIA ESTADISTICA**</center>"
+
+author: "Ramiro Rodríguez"
+date: "2024-04-01"
+output: html_document
+---
+>Supongamos que nos regalan un áJbum con n = 75 cromos, que se venden sobres con m = 6 cron.1os
+por 0 .8€, y que estamos interesados en el número de sobres que hay que comprar para completar la
+colección, por ejemplo en sn valor medio.
+Podemos aproximar la distribución del número de sobres para completar la colección a partir de
+nsim "' 1000 simulaciones de coleccionistas de cromos:
+
+```{r}
+n <- 75 # Número total de cromos
+m <- 6 #Número de cromos en cada sobre
+repe <- TRUE #Repetición de cromos en cada sobre
+#Número de simulaciones
 nsim <- 1000
+
 nsobres <- numeric(nsim)
 set.seed(1)
 for (isim in 1:nsim) {
@@ -17,15 +32,25 @@ for (isim in 1:nsim) {
   nsobres[isim] <- i
 }
 
+#Distribución del número de sobres para completar la colección
+
 hist(nsobres, breaks = "FD", freq = FALSE, main = "", xlab = "Numero de sobres")
 lines(density(nsobres))
+#Figura 1 .1 : Aproximación por simulación de la. distribución del mí.mero de sobres para
+#completar la colección.
 
-
+#Aproximación por simulación de] número medio de sobres para completar la co]ección
 sol <- mean(nsobres)
 print(sol)
 
+#número mínimo de sobres para asegurar de que se completa la co]ección con nna probabilidad del95%
+
 nmin <- quantile(nsobres, probs = 0.95)
 print(ceiling(nmin))
+
+# Reserva de dinero para poder completar la colección el 95'l. de las veces:
+
+ceiling(nmin)*0.8
 print(ceiling(nsim) * 0.8)
 
 
@@ -34,6 +59,11 @@ lines(density(nsobres))
 abline(v = sol)
 abline(v = nmin, lty = 2)
 
-res <- simres::mc.plot(nsobres*0.8)
-res$approx # sol•0.8
-simres::mc.plot()
+# Por supuesto, la distribución del gasto necesar io para oompletar la colección es esta misma reescalada
+#res <- simres::mc.plot(nsobres*0.8)
+# Aproximación del gasto medio:
+
+#res$approx # sol*0.8
+#simres::mc.plot().
+```
+
