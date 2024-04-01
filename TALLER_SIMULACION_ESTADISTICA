@@ -1,0 +1,540 @@
+---
+title: "<center>**PRIMER TALLER DE SIMULACION ESTADISTICA**</center>"
+
+author: "Ramiro Rodríguez"
+date: "2024-04-01"
+output: html_document
+---
+>**PRIMER PUNTO**
+
+>Supongamos que nos regalan un áJbum con n = 75 cromos, que se venden sobres con m = 6 cron.1os
+por 0 .8€, y que estamos interesados en el número de sobres que hay que comprar para completar la
+colección, por ejemplo en sn valor medio.
+Podemos aproximar la distribución del número de sobres para completar la colección a partir de
+nsim "' 1000 simulaciones de coleccionistas de cromos:
+
+```{r}
+n <- 75 # Número total de cromos
+m <- 6 #Número de cromos en cada sobre
+repe <- TRUE #Repetición de cromos en cada sobre
+#Número de simulaciones
+nsim <- 1000
+
+nsobres <- numeric(nsim)
+set.seed(1)
+for (isim in 1:nsim) {
+  album <- logical(n)
+  i <- 0
+  while (sum(album) < n) {
+    i <- i + 1
+    
+    
+    album[sample(n, m, replace = repe)] <- TRUE
+  }
+  nsobres[isim] <- i
+}
+
+#Distribución del número de sobres para completar la colección
+
+hist(nsobres, breaks = "FD", freq = FALSE, main = "", xlab = "Numero de sobres")
+lines(density(nsobres))
+#Figura 1 .1 : Aproximación por simulación de la. distribución del mí.mero de sobres para
+#completar la colección.
+
+#Aproximación por simulación de] número medio de sobres para completar la co]ección
+sol <- mean(nsobres)
+print(sol)
+
+#número mínimo de sobres para asegurar de que se completa la co]ección con nna probabilidad del95%
+
+nmin <- quantile(nsobres, probs = 0.95)
+print(ceiling(nmin))
+
+# Reserva de dinero para poder completar la colección el 95'l. de las veces:
+
+ceiling(nmin)*0.8
+print(ceiling(nsim) * 0.8)
+
+
+hist(nsobres, breaks = "FD", freq = FALSE, main = "", xlab = "Numero de sobres")
+lines(density(nsobres))
+abline(v = sol)
+abline(v = nmin, lty = 2)
+
+# Por supuesto, la distribución del gasto necesar io para oompletar la colección es esta misma reescalada
+#res <- simres::mc.plot(nsobres*0.8)
+# Aproximación del gasto medio:
+
+#res$approx # sol*0.8
+#simres::mc.plot().
+```
+
+
+>**SEGUNDO PUNTO**
+
+>thelta=-0.8
+
+```{r}
+modeloma <- function(cte, theta1, sigma, nsim, pc) {
+  X <- rep(0, nsim + pc)
+  errores <- rnorm(nsim + pc, mean = 0, sd = 2)
+  for (k in 2:(nsim + pc)) {
+    X[k] <- cte + theta1 * errores[k - 1]+errores[k]
+  }
+  return(datos = X[(pc + 1):(nsim + pc)])
+}
+s <- modeloma(cte = 0, theta1 = -0.8, sigma = 2, nsim = 3000, pc = 1000)
+
+par(mfrow = c(3, 1))
+ts.plot(s, main = "Serie de tiempo")
+acf(s, main = "Autocorrelación")
+pacf(s, main = "Autocorrelación parcial")
+```
+
+>**Conclusión**Podemos concluir que la graficamuestra que los valores de autocorrelación son cercanos a cero para todos los rezagos después del primer rezago. Esto sugiere que no hay una correlación serial significativa en la serie temporal y, por lo tanto, se cumple el requisito de independencia, ademas La serie temporal parece mantener un nivel y una variabilidad constante a lo largo del tiempo, lo que sugiere estacionariedad en la media y la varianza.
+>Dado que las características estadísticas de la serie no cambian significativamente con el tiempo y la serie parece mantener una distribución constante a lo largo del tiempo, podemos inferir la ergodicidad en el proceso.
+
+
+>**Thelta**=2
+```{r}
+modeloma <- function(cte, theta1, sigma, nsim, pc) {
+  X <- rep(0, nsim + pc)
+  errores <- rnorm(nsim + pc, mean = 0, sd = 2)
+  for (k in 2:(nsim + pc)) {
+    X[k] <- cte + theta1 * errores[k - 1]+errores[k]
+  }
+  return(datos = X[(pc + 1):(nsim + pc)])
+}
+
+s <- modeloma(cte = 0, theta1 = 2, sigma = 2, nsim = 3000, pc = 1000)
+
+par(mfrow = c(3, 1))
+ts.plot(s, main = "Serie de tiempo")
+acf(s, main = "Autocorrelación")
+pacf(s, main = "Autocorrelación parcial")
+```
+>**Conclusión**Podemos concluir que la graficamuestra que los valores de autocorrelación son cercanos a cero para todos los rezagos después del primer rezago. Esto sugiere que no hay una correlación serial significativa en la serie temporal y, por lo tanto, se cumple el requisito de independencia, ademas La serie temporal parece mantener un nivel y una variabilidad constante a lo largo del tiempo, lo que sugiere estacionariedad en la media y la varianza.
+>Dado que las características estadísticas de la serie no cambian significativamente con el tiempo y la serie parece mantener una distribución constante a lo largo del tiempo, podemos inferir la ergodicidad en el proceso.
+
+
+>Theta=1
+```{r}
+modeloma <- function(cte, theta1, sigma, nsim, pc) {
+  X <- rep(0, nsim + pc)
+  errores <- rnorm(nsim + pc, mean = 0, sd = 2)
+  for (k in 2:(nsim + pc)) {
+    X[k] <- cte + theta1 * errores[k - 1]+errores[k]
+  }
+  return(datos = X[(pc + 1):(nsim + pc)])
+}
+
+s <- modeloma(cte = 0, theta1 = 1 , sigma = 2, nsim = 3000, pc = 1000)
+
+par(mfrow = c(3, 1))
+ts.plot(s, main = "Serie de tiempo")
+acf(s, main = "Autocorrelación")
+pacf(s, main = "Autocorrelación parcial")
+```
+>**Conclusión**Podemos concluir que la graficamuestra que los valores de autocorrelación son cercanos a cero para todos los rezagos después del primer rezago. Esto sugiere que no hay una correlación serial significativa en la serie temporal y, por lo tanto, se cumple el requisito de independencia, ademas La serie temporal parece mantener un nivel y una variabilidad constante a lo largo del tiempo, lo que sugiere estacionariedad en la media y la varianza.
+>Dado que las características estadísticas de la serie no cambian significativamente con el tiempo y la serie parece mantener una distribución constante a lo largo del tiempo, podemos inferir la ergodicidad en el proceso.
+
+
+
+
+>**TERCER PUNTO**
+
+```{r}
+ts.sim <- arima.sim(list(order = c(1,0,1), ar = 0.5, ma=0.18), n = 4000)
+ts.sim <- ts.sim[1001:4000]
+
+
+par(mfrow=c(3,1))
+ts.plot(ts.sim)
+acf(ts.sim)    # Función de autocorrelación
+pacf(ts.sim)   # Función de autocorrelación parcial
+
+```
+
+>**Conclusiones:**
+>La función de autocorrelación nos muestra la correlación entre la serie en diferentes rezagos. Con un coeficiente AR de 0.5, esperaríamos ver autocorrelaciones significativas para los rezagos pasados. La función ACF debería decaer gradualmente a medida que aumenta el rezago debido al componente MA
+
+>Con un coeficiente AR de 0.5, esperaríamos ver una autocorrelación parcial significativa en el primer rezago y una disminución gradual en los rezagos posteriores.
+
+
+
+
+>**CUARTO PUNTO**
+
+>**4.1**
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+>ejercicio 4 aplicacion del metodo de inmersion para generar numeros aleatorio  
+>con la distribucion de cauchy
+
+> Expresar \( y \) en términos de \( x \)**:
+
+$$F(x)= F(x) = \frac{1}{2} + \frac{1}{\pi} \arctan(x)$$
+
+```
+Despejamos ( x )
+```
+
+
+$$ y = \frac{1}{2} + \frac{1}{\pi} \arctan(x) $$ 
+
+
+
+$$ y - \frac{1}{2} = \frac{1}{\pi} \arctan(x) $$
+
+```
+Aplicar la función tangente inversa (arctan)
+```
+$$[ \pi(y - \frac{1}{2}) = \arctan(x) $$
+
+
+
+$$[ x = \tan(\pi(y - \frac{1}{2})) $$
+>Este es el resultado de la inversión de la función de distribución acumulativa para la distribución de Cauchy. 
+
+
+## R Markdown
+
+>Codigo del método de inmersion para generar numeros aleatorios para la distribucion de cauchyu
+
+```{r}
+# Función para generar números aleatorios de la distribución de Cauchy (método de inmersión)
+rcauchy_immersion <- function(n, x0, gamma) {
+  u <- runif(n)
+  x <- x0 + gamma * tan(pi * (u - 0.5))
+  return(x)
+}
+
+# Parámetros de la distribución de Cauchy
+x0 <- 0   # Parámetro de localización
+gamma <- 1    # Parámetro de escala
+
+# Número de muestras a generar
+n <- 10000
+
+# Generar números aleatorios de la distribución de Cauchy
+cauchy_numbers <- rcauchy_immersion(n, x0, gamma)
+
+# Visualizar la distribución de Cauchy
+hist(cauchy_numbers, breaks = 50, freq = FALSE, col = 'skyblue', main = 'Distribución de Cauchy', xlab = 'Valor')
+lines(density(cauchy_numbers), col = 'red', lwd = 2)
+
+ljung_box_test <- Box.test(cauchy_numbers, lag = 3, type = "Ljung")
+print(ljung_box_test)
+
+# Vector para almacenar los valores p de la prueba de Ljung-Box para cada lag del 1 al 10
+p_values <- numeric(10)
+
+# Realizar la prueba de Ljung-Box para cada lag del 1 al 10
+for (lag in 1:10) {
+  ljung_box_test <- Box.test(cauchy_numbers, lag = lag, type = "Ljung")
+  p_values[lag] <- ljung_box_test$p.value
+}
+
+# Imprimir los valores p para cada lag del 1 al 10
+print(p_values)
+
+```
+>Los valores p para los rezagos del 1 al 10 es menor que el nivel de significancia elegido (0.05), entonces hay evidencia de autocorrelación en ese rezago en particular.
+
+
+
+>**4.2**
+
+```{r}
+```
+
+>Desarrollo de la Integral de Densidad para la Distribución Triangular
+
+>Integral en el intervalo \( [a, c] \):
+
+>Aplicamos la integral:
+   
+   $$
+   \int_{a}^{c} \frac{2(x - a)}{(b - a)(c - a)} \, dx
+   $$
+
+>Simplificamos y resolvemos la integral:
+ 
+  $$ = \frac{2}{(b - a)(c - a)} \int_{a}^{c} (x - a) \, dx $$
+  
+
+   
+   $$= \frac{2}{(b - a)(c - a)} \left[ \frac{x^2}{2} - ax \right]_{a}^{c}$$
+
+  $$
+   = \frac{2}{(b - a)(c - a)} \left[ \frac{c^2}{2} - ac - \frac{a^2}{2} + a^2 \right]
+   $$
+
+   $$
+   = \frac{2}{(b - a)(c - a)} \left[ \frac{c^2 - 2ac + a^2}{2} \right]$$
+
+   
+   $$= \frac{2}{(b - a)(c - a)} \left[ \frac{(c - a)^2}{2} \right]
+   $$
+
+   
+   $$= \frac{c - a}{b - a}$$
+
+>Integral en el intervalo \( [c, b] \):
+
+>Aplicamos la integral:
+   \[
+   \int_{c}^{b} \frac{2(b - x)}{(b - a)(b - c)} \, dx
+   \]
+
+>Simplificamos y resolvemos la integral:
+   
+   $$= \frac{2}{(b - a)(b - c)} \int_{c}^{b} (b - x) \, dx$$
+
+   
+   $$= \frac{2}{(b - a)(b - c)} \left[ bx - \frac{x^2}{2} \right]_{c}^{b}$$
+
+   
+   $$= \frac{2}{(b - a)(b - c)} \left[ b^2 - \frac{b^2}{2} - bc + \frac{c^2}{2} \right]$$
+
+   
+   $$= \frac{2}{(b - a)(b - c)} \left[ \frac{b^2}{2} - bc + \frac{c^2}{2} \right]$$
+
+   
+   $$= \frac{2}{(b - a)(b - c)} \left[ \frac{b^2 - 2bc + c^2}{2} \right]$$
+
+   
+  $$ = \frac{2}{(b - a)(b - c)} \left[ \frac{(b - c)^2}{2} \right]$$
+
+   
+   $$= \frac{b - c}{b - a}$$
+>Desarrollo de la Integral Acumulada para la Distribución Triangular
+
+>La función de distribución acumulada (CDF) \( F(x) \) para la distribución >triangular es la integral acumulada de la función de densidad de probabilidad f(x) . >Dado que ya hemos calculado la integral de densidad, podemos obtener la CDF como sigue:
+
+
+$$F(x) = \begin{cases} \frac{x - a}{b - a} & \text{si } a \leq x < c \\ 1 - \frac{b - x}{b - a} & \text{si } c \leq x \leq b \end{cases}$$
+
+>Desarrollo:
+
+$$ Para ( a \leq x < c ):$$
+
+
+$$\int_{a}^{x} \frac{2(t - a)}{(b - a)(c - a)} \, dt = \frac{(x - a)^2}{(b - a)(c - a)}$$
+
+$$Para ( c \leq x \leq b ):$$
+
+$$
+\int_{a}^{c} \frac{2(t - a)}{(b - a)(c - a)} \, dt + \int_{c}^{x} \frac{2(b - t)}{(b - a)(b - c)} \, dt = \frac{c - a}{b - a} + \frac{(b - x)^2}{(b - a)(b - c)}
+$$
+
+>Resultado:
+
+
+$$F(x) = \begin{cases} \frac{(x - a)^2}{(b - a)(c - a)} & \text{si } a \leq x < c \\ 1 - \frac{c - a}{b - a} - \frac{(b - x)^2}{(b - a)(b - c)} & \text{si } c \leq x \leq b \end{cases}$$
+>Función para generar números aleatorios con distribución triangular usando el >método de inmersión
+
+```{r}
+
+
+rtriangle_immersion <- function(n, a, b, c) {
+  # Generar números aleatorios uniformemente distribuidos entre 0 y 1
+  U <- runif(n)
+  X <- numeric(n)  # Vector para almacenar los números aleatorios generados
+  
+  # Calcular la inversa de la CDF para cada segmento de la distribución triangular
+  invCDF <- function(p) {
+    ifelse(p <= (c - a) / (b - a), a + sqrt(p * (b - a) * (c - a)), 
+           b - sqrt((1 - p) * (b - a) * (b - c)))
+  }
+  
+  # Generar números aleatorios utilizando la inversa de la CDF
+  for (i in 1:n) {
+    X[i] <- invCDF(U[i])
+  }
+  
+  return(X)
+}
+
+# Parámetros de la distribución triangular
+a <- 1
+b <- 5
+c <- 3
+
+# Generar 1000 números aleatorios con distribución triangular
+n <- 1000
+triangular <- rtriangle_immersion(n, a, b, c)
+
+
+
+# Visualizar el histograma de la distribución triangular generada
+
+hist(triangular, breaks = 20, freq = FALSE, main = "Distribución Triangular",
+     xlab = "Valor", ylab = "Densidad")
+# Prueba de Ljung-Box
+p_values <- numeric(10)
+
+# Realizar la prueba de Ljung-Box para cada lag del 1 al 10
+for (lag in 1:10) {
+  ljung_box_test <- Box.test(triangular, lag = lag, type = "Ljung")
+  p_values[lag] <- ljung_box_test$p.value
+}
+
+# Imprimir los valores p para cada lag del 1 al 10
+print(p_values)
+```
+
+>Los valores p para los rezagos del 1 al 10 es menor que el nivel de significancia elegido (0.05), entonces hay evidencia de autocorrelación en ese rezago en particular.
+
+
+>**4.3
+
+```{r}
+```
+>Paso a Paso: Función Inversa de la Distribución de Pareto
+
+>Paso 1: Función de Densidad de Probabilidad (PDF) de Pareto
+La función de densidad de probabilidad (PDF) de la distribución de Pareto está dada por:
+
+$$ f(x) = \frac{\alpha \cdot x_m^\alpha}{x^{\alpha + 1}} $$
+
+$$donde ( x \geq x_m ), ( alpha > 0 ) .$$
+
+>Paso 2: Función de Distribución Acumulada (CDF) de Pareto
+La función de distribución acumulada (CDF) de la distribución de Pareto se define como:
+
+$$ F(x) = 1 - \left( \frac{x_m}{x} \right)^\alpha $$
+
+$$donde ( x \geq x_m ), ( \alpha > 0 )$$
+
+>Paso 3: Obtención de la Función Inversa de la CDF
+>Para obtener la función inversa de la CDF de Pareto, resolvemos la ecuación de la >CDF para ( x ):
+
+$$[ u = 1 - \left( \frac{x_m}{x} \right)^\alpha ]$$
+
+>donde ( u ) es un número aleatorio uniformemente distribuido entre 0 y 1. Resolviendo para ( x ), obtenemos:
+
+$$[ x = x_m \left( \frac{1}{1 - u} \right)^{\frac{1}{\alpha}} ]$$
+
+>Esta ecuación nos permite generar valores de la variable aleatoria ( X ) a partir >de números aleatorios ( u ) distribuidos uniformemente en el intervalo [0, 1].
+
+>Paso 4: Implementación en R
+
+```{r}
+# Función para generar números aleatorios con distribución de Pareto usando el método de inmersión
+rpareto_immersion <- function(n, shape, xmin) {
+  # Generar números aleatorios uniformemente distribuidos entre 0 y 1
+  u <- runif(n)
+  # Aplicar la función inversa de la CDF
+  x <- xmin / (1 - u)^(1/shape)
+  return(x)
+}
+
+# Función de densidad de la distribución de Pareto
+dpareto <- function(x, shape, xmin) {
+  ifelse(x >= xmin, shape * xmin^shape / x^(shape + 1), 0)
+}
+
+# Parámetros de la distribución de Pareto
+shape <- 2  # Parámetro de forma
+xmin <- 1   # Valor mínimo
+
+# Generar 1000 números aleatorios con distribución de Pareto
+n <- 1000
+pareto_numbers <- rpareto_immersion(n, shape, xmin)
+
+
+# Gráfico de densidad
+hist(pareto_numbers, breaks = 30, freq = FALSE, main = "Distribución de Pareto", xlab = "Valor", ylab = "Densidad")
+curve(dpareto(x, shape, xmin), add = TRUE, col = "blue", lwd = 2)
+legend("topright", legend = "Distribución de Pareto", col = "blue", lty = 1, lwd = 2)
+
+# Prueba de Ljung-Box
+p_values <- numeric(10)
+
+# Realizar la prueba de Ljung-Box para cada lag del 1 al 10
+for (lag in 1:10) {
+  ljung_box_test <- Box.test(pareto_numbers, lag = lag, type = "Ljung")
+  p_values[lag] <- ljung_box_test$p.value
+}
+
+# Imprimir los valores p para cada lag del 1 al 10
+print(p_values)
+```
+>Los valores p para los rezagos del 1 al 10 es menor que el nivel de significancia elegido (0.05), entonces hay evidencia de autocorrelación en ese rezago en particular.
+
+>**4.4**
+
+```{r}
+```
+>Función de Densidad de Probabilidad (PDF) de Weibull:
+>La función de densidad de probabilidad (PDF) de la distribución de Weibull está dada por la fórmula:
+
+$$
+f(x) = \frac{k}{\lambda} \left(\frac{x}{\lambda}\right)^{k-1} e^{-(x/\lambda)^k}$$
+
+>Donde ( k ) es el parámetro de forma y ( lambda ) es el parámetro de escala.
+
+>Función de Distribución Acumulada (CDF) de Weibull:
+>La función de distribución acumulada (CDF) de la distribución de Weibull está dada por la fórmula:
+
+$$F(x) = 1 - e^{-(x/\lambda)^k}$$
+
+> Función Inversa de la CDF de Weibull:
+>La función inversa de la CDF de la distribución de Weibull es:
+
+
+$$x = \lambda (-\ln(1 - u))^{1/k}$$
+
+>Donde \( u \) es un número aleatorio uniformemente distribuido entre 0 y 1.
+
+```{r}
+
+# Función de densidad de probabilidad (PDF) de Weibull
+dweibull <- function(x, shape, scale) {
+  (shape / scale) * (x / scale)^(shape - 1) * exp(-(x / scale)^shape)
+}
+
+# Función de distribución acumulada (CDF) de Weibull
+pweibull <- function(x, shape, scale) {
+  1 - exp(-(x / scale)^shape)
+}
+
+# Función inversa de la CDF de Weibull
+qweibull <- function(u, shape, scale) {
+  scale * (-log(1 - u))^(1 / shape)
+}
+
+# Parámetros de la distribución de Weibull
+shape <- 2  # Parámetro de forma
+scale <- 1  # Parámetro de escala
+
+# Generar 1000 números aleatorios con distribución de Weibull
+n <- 1000
+weibull_numbers <- qweibull(runif(n), shape, scale)
+
+# Prueba de Ljung-Box
+p_values <- numeric(10)
+
+# Realizar la prueba de Ljung-Box para cada lag del 1 al 10
+for (lag in 1:10) {
+  ljung_box_test <- Box.test(weibull_numbers, lag = lag, type = "Ljung")
+  p_values[lag] <- ljung_box_test$p.value
+}
+
+# Imprimir los valores p para cada lag del 1 al 10
+print(p_values)
+
+# Graficar los valores p
+plot(1:10, p_values, type = "b", pch = 19, col = "blue", 
+     main = "Valores p de la Prueba de Ljung-Box para Weibull", xlab = "Lag", ylab = "Valor p")
+abline(h = 0.05, col = "red", lty = 2)  # Línea horizontal en p = 0.05 como umbral
+legend("topright", legend = "Umbral (p = 0.05)", col = "red", lty = 2)
+```
+
+>Los valores p para los rezagos del 1 al 10 es menor que el nivel de significancia elegido (0.05), entonces hay evidencia de autocorrelación en ese rezago en particular.
+
+>**<center>FINALIZACION DEL PRIMER TALLER DE SIMULACION ESTADISTICA</center>**
