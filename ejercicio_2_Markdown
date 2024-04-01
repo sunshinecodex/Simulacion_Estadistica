@@ -1,9 +1,10 @@
 ---
-title: "ejercicio2_taller"
+title: "ejercicio2_taller_1"
 author: "Ramiro Rodríguez"
 date: "2024-03-29"
 output: html_document
 ---
+
 >thelta=-0.8
 
 ```{r}
@@ -23,7 +24,11 @@ acf(s, main = "Autocorrelación")
 pacf(s, main = "Autocorrelación parcial")
 ```
 
->Thelta=2
+>**Conclusión**Podemos concluir que la graficamuestra que los valores de autocorrelación son cercanos a cero para todos los rezagos después del primer rezago. Esto sugiere que no hay una correlación serial significativa en la serie temporal y, por lo tanto, se cumple el requisito de independencia, ademas La serie temporal parece mantener un nivel y una variabilidad constante a lo largo del tiempo, lo que sugiere estacionariedad en la media y la varianza.
+>Dado que las características estadísticas de la serie no cambian significativamente con el tiempo y la serie parece mantener una distribución constante a lo largo del tiempo, podemos inferir la ergodicidad en el proceso.
+
+
+>**Thelta**=2
 ```{r}
 modeloma <- function(cte, theta1, sigma, nsim, pc) {
   X <- rep(0, nsim + pc)
@@ -41,6 +46,9 @@ ts.plot(s, main = "Serie de tiempo")
 acf(s, main = "Autocorrelación")
 pacf(s, main = "Autocorrelación parcial")
 ```
+>**Conclusión**Podemos concluir que la graficamuestra que los valores de autocorrelación son cercanos a cero para todos los rezagos después del primer rezago. Esto sugiere que no hay una correlación serial significativa en la serie temporal y, por lo tanto, se cumple el requisito de independencia, ademas La serie temporal parece mantener un nivel y una variabilidad constante a lo largo del tiempo, lo que sugiere estacionariedad en la media y la varianza.
+>Dado que las características estadísticas de la serie no cambian significativamente con el tiempo y la serie parece mantener una distribución constante a lo largo del tiempo, podemos inferir la ergodicidad en el proceso.
+
 
 >Theta=1
 ```{r}
@@ -60,3 +68,5 @@ ts.plot(s, main = "Serie de tiempo")
 acf(s, main = "Autocorrelación")
 pacf(s, main = "Autocorrelación parcial")
 ```
+>**Conclusión**Podemos concluir que la graficamuestra que los valores de autocorrelación son cercanos a cero para todos los rezagos después del primer rezago. Esto sugiere que no hay una correlación serial significativa en la serie temporal y, por lo tanto, se cumple el requisito de independencia, ademas La serie temporal parece mantener un nivel y una variabilidad constante a lo largo del tiempo, lo que sugiere estacionariedad en la media y la varianza.
+>Dado que las características estadísticas de la serie no cambian significativamente con el tiempo y la serie parece mantener una distribución constante a lo largo del tiempo, podemos inferir la ergodicidad en el proceso.
