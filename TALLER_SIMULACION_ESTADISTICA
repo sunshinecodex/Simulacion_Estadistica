@@ -493,16 +493,6 @@ $$x = \lambda (-\ln(1 - u))^{1/k}$$
 
 ```{r}
 
-# Función de densidad de probabilidad (PDF) de Weibull
-dweibull <- function(x, shape, scale) {
-  (shape / scale) * (x / scale)^(shape - 1) * exp(-(x / scale)^shape)
-}
-
-# Función de distribución acumulada (CDF) de Weibull
-pweibull <- function(x, shape, scale) {
-  1 - exp(-(x / scale)^shape)
-}
-
 # Función inversa de la CDF de Weibull
 qweibull <- function(u, shape, scale) {
   scale * (-log(1 - u))^(1 / shape)
